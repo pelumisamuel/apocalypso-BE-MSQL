@@ -22,6 +22,7 @@ const LogIn = asyncHandler(async (req, res) => {
     res.json({
       id: user.id,
       name: user.name,
+      email: user.email,
       isAdmin: user.admin,
       token: generateToken(user.id),
     })
@@ -30,6 +31,7 @@ const LogIn = asyncHandler(async (req, res) => {
   }
 })
 
+// REGISTER USER
 const registerUser = asyncHandler(async (req, res) => {
   const { error } = validateUsers(req.body)
   if (error) return res.status(400).send({ error: error.details[0].message })
@@ -62,4 +64,16 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 })
 
-export { LogIn, registerUser }
+//GET ALL USERS FROM ADMIN
+
+const getUsers = asyncHandler(async (req, res) => {
+  try {
+    const allUsers = await pool.query('SELECT * FROM customer')
+    console.log(req)
+
+    res.status(200).json(allUsers[0])
+  } catch (error) {
+    throw new Error()
+  }
+})
+export { LogIn, registerUser, getUsers }
